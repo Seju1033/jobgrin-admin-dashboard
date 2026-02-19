@@ -64,6 +64,7 @@ function renderSection(section) {
         let content = '';
         
         switch(section) {
+            // Core Modules
             case 'dashboard': content = Modules.renderDashboard(); break;
             case 'employer-trust': content = Modules.renderEmployerTrust(); break;
             case 'job-verification': content = Modules.renderJobVerification(); break;
@@ -76,6 +77,19 @@ function renderSection(section) {
             case 'all-employers': content = Modules.renderAllEmployers(); break;
             case 'candidates': content = Modules.renderCandidates(); break;
             case 'skills': content = Modules.renderSkills(); break;
+            
+            // NEW MODULES
+            case 'xml-feeds': content = Modules.renderXMLFeeds(); break;
+            case 'courses': content = Modules.renderCourses(); break;
+            case 'resume-search': content = Modules.renderResumeSearch(); break;
+            case 'communication-center': content = Modules.renderCommunicationCenter(); break;
+            case 'audit-compliance': content = Modules.renderAuditCompliance(); break;
+            case 'employer-verification': content = Modules.renderEmployerVerification(); break;
+            case 'workflow-automation': content = Modules.renderWorkflowAutomation(); break;
+            case 'performance-monitoring': content = Modules.renderPerformanceMonitoring(); break;
+            case 'job-quality-scoring': content = Modules.renderJobQualityScoring(); break;
+            case 'candidate-quality-tools': content = Modules.renderCandidateQualityTools(); break;
+            
             default: content = Modules.renderUnderConstruction(section.replace(/-/g, ' ').toUpperCase(), 'Feature module');
         }
         
