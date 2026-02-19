@@ -1,6 +1,6 @@
 // ============================================
 // JOBGRIN MASTER ADMIN - COMPREHENSIVE DATA
-// 50+ entries per major section
+// All missing features data added
 // ============================================
 
 const DATA = {
@@ -38,6 +38,59 @@ const DATA = {
     // PAYMENT TRANSACTIONS (60 entries)
     // ============================================
     payments: generatePayments(60),
+    
+    // ============================================
+    // XML FEED MANAGEMENT (30 entries)
+    // ============================================
+    xmlFeeds: generateXMLFeeds(30),
+    
+    // ============================================
+    // COURSES & SPECIALIZATIONS (50 entries)
+    // ============================================
+    courses: generateCourses(50),
+    
+    // ============================================
+    // RESUME SEARCH LOGS (100 entries)
+    // ============================================
+    resumeSearches: generateResumeSearches(100),
+    
+    // ============================================
+    // COMMUNICATION CENTER (80 entries)
+    // ============================================
+    communications: generateCommunications(80),
+    emailTemplates: generateEmailTemplates(20),
+    
+    // ============================================
+    // AUDIT & COMPLIANCE (150 entries)
+    // ============================================
+    auditLogs: generateAuditLogs(150),
+    gdprRequests: generateGDPRRequests(30),
+    
+    // ============================================
+    // EMPLOYER VERIFICATION RECORDS (60 entries)
+    // ============================================
+    verificationRecords: generateVerificationRecords(60),
+    
+    // ============================================
+    // WORKFLOW AUTOMATION RULES (40 entries)
+    // ============================================
+    automationRules: generateAutomationRules(40),
+    scheduledReports: generateScheduledReports(20),
+    
+    // ============================================
+    // PERFORMANCE MONITORING (Real-time)
+    // ============================================
+    performanceMetrics: generatePerformanceMetrics(),
+    
+    // ============================================
+    // JOB QUALITY SCORES (100 entries)
+    // ============================================
+    jobQualityScores: generateJobQualityScores(100),
+    
+    // ============================================
+    // CANDIDATE QUALITY SCORES (80 entries)
+    // ============================================
+    candidateQualityScores: generateCandidateQualityScores(80),
     
     // ============================================
     // PLATFORM HEALTH METRICS
@@ -99,71 +152,341 @@ const DATA = {
     },
     
     // ============================================
-    // BEHAVIORAL INTELLIGENCE DATA
+    // BEHAVIORAL PATTERNS (50 entries)
     // ============================================
     behavioralPatterns: generateBehavioralPatterns(50),
     
     // ============================================
-    // RISK RADAR ALERTS
+    // RISK ALERTS (40 entries)
     // ============================================
     riskAlerts: generateRiskAlerts(40),
     
     // ============================================
-    // ADMIN ACTIVITY LOGS
+    // ADMIN ACTIVITY LOGS (100 entries)
     // ============================================
     adminLogs: generateAdminLogs(100),
     
     // ============================================
-    // COMPLIANCE RECORDS
+    // COMPLIANCE RECORDS (50 entries)
     // ============================================
     complianceRecords: generateComplianceRecords(50),
     
     // ============================================
-    // MARKET INTELLIGENCE
+    // COMPETITIVE INTELLIGENCE (10 entries)
     // ============================================
-    marketIntelligence: {
-        competitorData: generateCompetitorData(10),
-        salaryTrends: generateSalaryTrends(20),
-        skillDemand: generateSkillDemand(30)
-    }
+    competitors: generateCompetitors(10),
+    
+    // ============================================
+    // SALARY TRENDS (20 entries)
+    // ============================================
+    salaryTrends: generateSalaryTrends(20),
+    
+    // ============================================
+    // SKILL DEMAND (30 entries)
+    // ============================================
+    skillDemand: generateSkillDemand(30)
 };
 
 // ============================================
 // DATA GENERATION FUNCTIONS
 // ============================================
 
-function generateEmployers(count) {
-    const companies = ['TCS Limited', 'Infosys Technologies', 'Wipro Digital', 'Tech Mahindra', 'HCL Technologies', 'Accenture India', 'Cognizant Technology', 'Capgemini India', 'IBM India', 'Oracle Financial Services', 'Amazon India', 'Flipkart', 'Paytm', 'Zomato', 'Swiggy', 'HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Reliance Industries', 'Tata Consultancy'];
-    const contacts = ['Rajesh Kumar', 'Priya Sharma', 'Amit Patel', 'Sneha Reddy', 'Vikram Singh', 'Neha Gupta', 'Arjun Mehta', 'Kavya Iyer', 'Rahul Verma', 'Pooja Nair'];
-    const locations = ['Mumbai', 'Bangalore', 'Delhi', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata', 'Ahmedabad', 'Gurgaon', 'Noida'];
-    const industries = ['IT Services', 'E-commerce', 'Fintech', 'Banking', 'Consulting', 'Technology', 'Food Tech', 'Software'];
-    const statuses = ['Verified', 'Pending', 'Suspended', 'Shadow-Banned'];
-    const riskLevels = ['Low', 'Medium', 'High'];
-    const employerTypes = ['Enterprise', 'Startup', 'SME'];
+// XML FEEDS
+function generateXMLFeeds(count) {
+    const feeds = [];
+    const sources = ['Naukri', 'Indeed', 'Monster', 'LinkedIn', 'Shine', 'TimesJobs', 'Glassdoor', 'Internshala'];
+    const statuses = ['Active', 'Paused', 'Error', 'Pending'];
     
-    const employers = [];
     for (let i = 1; i <= count; i++) {
-        const status = i <= 40 ? 'Verified' : (i <= 50 ? 'Pending' : (i <= 55 ? 'Suspended' : 'Shadow-Banned'));
-        const trustScore = status === 'Verified' ? 75 + Math.floor(Math.random() * 25) : (status === 'Pending' ? 50 + Math.floor(Math.random() * 25) : 20 + Math.floor(Math.random() * 30));
-        const riskLevel = trustScore >= 80 ? 'Low' : (trustScore >= 60 ? 'Medium' : 'High');
-        
+        feeds.push({
+            id: i,
+            source: sources[Math.floor(Math.random() * sources.length)],
+            url: `https://feed.example.com/jobs/feed${i}.xml`,
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            lastSync: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+            jobsImported: Math.floor(Math.random() * 5000) + 100,
+            successRate: Math.floor(Math.random() * 30) + 70,
+            errors: Math.floor(Math.random() * 50),
+            avgResponseTime: Math.floor(Math.random() * 3000) + 500,
+            nextSync: new Date(Date.now() + Math.random() * 24 * 60 * 60 * 1000).toISOString()
+        });
+    }
+    return feeds;
+}
+
+// COURSES & SPECIALIZATIONS
+function generateCourses(count) {
+    const courses = [];
+    const categories = ['Engineering', 'Management', 'Medical', 'Arts', 'Science', 'Commerce', 'Law', 'Design'];
+    const levels = ['Undergraduate', 'Postgraduate', 'Diploma', 'Certificate'];
+    
+    for (let i = 1; i <= count; i++) {
+        courses.push({
+            id: i,
+            name: `Course ${i}`,
+            category: categories[Math.floor(Math.random() * categories.length)],
+            level: levels[Math.floor(Math.random() * levels.length)],
+            duration: `${Math.floor(Math.random() * 4) + 1} Years`,
+            candidates: Math.floor(Math.random() * 10000) + 100,
+            jobs: Math.floor(Math.random() * 5000) + 50,
+            avgSalary: Math.floor(Math.random() * 500000) + 300000,
+            status: Math.random() > 0.1 ? 'Active' : 'Inactive'
+        });
+    }
+    return courses;
+}
+
+// RESUME SEARCHES
+function generateResumeSearches(count) {
+    const searches = [];
+    const employers = ['TechCorp', 'InnoSoft', 'DataSys', 'CloudNet', 'WebPro'];
+    
+    for (let i = 1; i <= count; i++) {
+        searches.push({
+            id: i,
+            employer: employers[Math.floor(Math.random() * employers.length)],
+            searchQuery: `Skills: ${['Java', 'Python', 'React', 'Node.js', 'AWS'][Math.floor(Math.random() * 5)]}`,
+            resultsFound: Math.floor(Math.random() * 500) + 10,
+            resumesViewed: Math.floor(Math.random() * 50) + 1,
+            resumesDownloaded: Math.floor(Math.random() * 20),
+            timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            creditsUsed: Math.floor(Math.random() * 10) + 1
+        });
+    }
+    return searches;
+}
+
+// COMMUNICATIONS
+function generateCommunications(count) {
+    const comms = [];
+    const types = ['Email', 'SMS', 'In-App', 'WhatsApp'];
+    const statuses = ['Sent', 'Delivered', 'Read', 'Failed', 'Pending'];
+    
+    for (let i = 1; i <= count; i++) {
+        comms.push({
+            id: i,
+            type: types[Math.floor(Math.random() * types.length)],
+            recipient: `user${i}@example.com`,
+            subject: `Communication ${i}`,
+            message: `This is message content for communication ${i}`,
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            sentAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+            readAt: Math.random() > 0.5 ? new Date(Date.now() - Math.random() * 6 * 24 * 60 * 60 * 1000).toISOString() : null
+        });
+    }
+    return comms;
+}
+
+// EMAIL TEMPLATES
+function generateEmailTemplates(count) {
+    const templates = [];
+    const categories = ['Welcome', 'Verification', 'Rejection', 'Approval', 'Reminder', 'Notification'];
+    
+    for (let i = 1; i <= count; i++) {
+        templates.push({
+            id: i,
+            name: `Template ${i}`,
+            category: categories[Math.floor(Math.random() * categories.length)],
+            subject: `Subject for Template ${i}`,
+            body: `Email body content for template ${i}`,
+            usageCount: Math.floor(Math.random() * 1000),
+            lastUsed: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'Active'
+        });
+    }
+    return templates;
+}
+
+// AUDIT LOGS
+function generateAuditLogs(count) {
+    const logs = [];
+    const actions = ['Job Approved', 'Job Rejected', 'Employer Verified', 'Employer Suspended', 'Payment Processed', 'Data Exported', 'Settings Changed'];
+    const admins = ['Admin1', 'Admin2', 'Admin3', 'SuperAdmin'];
+    
+    for (let i = 1; i <= count; i++) {
+        logs.push({
+            id: i,
+            admin: admins[Math.floor(Math.random() * admins.length)],
+            action: actions[Math.floor(Math.random() * actions.length)],
+            target: `Target ${i}`,
+            details: `Action details for log ${i}`,
+            ipAddress: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+            timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'Success'
+        });
+    }
+    return logs;
+}
+
+// GDPR REQUESTS
+function generateGDPRRequests(count) {
+    const requests = [];
+    const types = ['Data Export', 'Data Deletion', 'Access Request', 'Rectification'];
+    const statuses = ['Pending', 'In Progress', 'Completed', 'Rejected'];
+    
+    for (let i = 1; i <= count; i++) {
+        requests.push({
+            id: i,
+            type: types[Math.floor(Math.random() * types.length)],
+            requester: `user${i}@example.com`,
+            requestDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            completedDate: Math.random() > 0.5 ? new Date(Date.now() - Math.random() * 20 * 24 * 60 * 60 * 1000).toISOString() : null,
+            assignedTo: `Admin${Math.floor(Math.random() * 3) + 1}`
+        });
+    }
+    return requests;
+}
+
+// VERIFICATION RECORDS
+function generateVerificationRecords(count) {
+    const records = [];
+    const methods = ['GST', 'CIN', 'LinkedIn', 'Domain', 'Phone', 'Document'];
+    const statuses = ['Verified', 'Failed', 'Pending', 'Expired'];
+    
+    for (let i = 1; i <= count; i++) {
+        records.push({
+            id: i,
+            employerId: i,
+            method: methods[Math.floor(Math.random() * methods.length)],
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            verifiedBy: `Admin${Math.floor(Math.random() * 3) + 1}`,
+            verificationDate: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString(),
+            expiryDate: new Date(Date.now() + Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+            documentUrl: `https://docs.example.com/verify${i}.pdf`,
+            notes: `Verification notes for record ${i}`
+        });
+    }
+    return records;
+}
+
+// AUTOMATION RULES
+function generateAutomationRules(count) {
+    const rules = [];
+    const triggers = ['Job Posted', 'Employer Registered', 'Payment Received', 'Application Submitted'];
+    const actions = ['Auto-Approve', 'Auto-Reject', 'Send Email', 'Assign Tag', 'Update Status'];
+    
+    for (let i = 1; i <= count; i++) {
+        rules.push({
+            id: i,
+            name: `Rule ${i}`,
+            trigger: triggers[Math.floor(Math.random() * triggers.length)],
+            action: actions[Math.floor(Math.random() * actions.length)],
+            conditions: `Condition set ${i}`,
+            status: Math.random() > 0.2 ? 'Active' : 'Inactive',
+            executionCount: Math.floor(Math.random() * 1000),
+            lastExecuted: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+            createdBy: `Admin${Math.floor(Math.random() * 3) + 1}`
+        });
+    }
+    return rules;
+}
+
+// SCHEDULED REPORTS
+function generateScheduledReports(count) {
+    const reports = [];
+    const types = ['Daily Summary', 'Weekly Analytics', 'Monthly Revenue', 'Quarterly Review'];
+    const frequencies = ['Daily', 'Weekly', 'Monthly', 'Quarterly'];
+    
+    for (let i = 1; i <= count; i++) {
+        reports.push({
+            id: i,
+            name: `Report ${i}`,
+            type: types[Math.floor(Math.random() * types.length)],
+            frequency: frequencies[Math.floor(Math.random() * frequencies.length)],
+            recipients: [`admin${i}@jobgrin.com`],
+            lastSent: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+            nextScheduled: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'Active'
+        });
+    }
+    return reports;
+}
+
+// PERFORMANCE METRICS
+function generatePerformanceMetrics() {
+    return {
+        pageLoadTime: Math.floor(Math.random() * 2000) + 500,
+        apiResponseTime: Math.floor(Math.random() * 500) + 100,
+        databaseQueryTime: Math.floor(Math.random() * 300) + 50,
+        errorRate: (Math.random() * 2).toFixed(2),
+        uptime: 99.8,
+        activeUsers: Math.floor(Math.random() * 100) + 20,
+        cpuUsage: Math.floor(Math.random() * 60) + 20,
+        memoryUsage: Math.floor(Math.random() * 70) + 30,
+        diskUsage: Math.floor(Math.random() * 50) + 30,
+        networkLatency: Math.floor(Math.random() * 100) + 20
+    };
+}
+
+// JOB QUALITY SCORES
+function generateJobQualityScores(count) {
+    const scores = [];
+    for (let i = 1; i <= count; i++) {
+        scores.push({
+            jobId: i,
+            overallScore: Math.floor(Math.random() * 40) + 60,
+            completenessScore: Math.floor(Math.random() * 40) + 60,
+            clarityScore: Math.floor(Math.random() * 40) + 60,
+            formattingScore: Math.floor(Math.random() * 40) + 60,
+            salaryRealism: Math.random() > 0.3,
+            duplicateCheck: Math.random() > 0.1 ? 'Clean' : 'Duplicate',
+            spamScore: Math.floor(Math.random() * 30),
+            recommendations: ['Add more details', 'Improve formatting', 'Clarify requirements']
+        });
+    }
+    return scores;
+}
+
+// CANDIDATE QUALITY SCORES
+function generateCandidateQualityScores(count) {
+    const scores = [];
+    for (let i = 1; i <= count; i++) {
+        scores.push({
+            candidateId: i,
+            profileCompleteness: Math.floor(Math.random() * 40) + 60,
+            resumeQuality: Math.floor(Math.random() * 40) + 60,
+            emailVerified: Math.random() > 0.2,
+            phoneVerified: Math.random() > 0.3,
+            duplicateCheck: Math.random() > 0.1 ? 'Clean' : 'Duplicate',
+            fakeResumeScore: Math.floor(Math.random() * 20),
+            engagementScore: Math.floor(Math.random() * 40) + 60,
+            lastActive: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
+        });
+    }
+    return scores;
+}
+
+// Continue with existing generator functions...
+// (Keep all the original generator functions from the previous data.js)
+
+function generateEmployers(count) {
+    const employers = [];
+    const companies = ['TechCorp', 'InnoSoft', 'DataSys', 'CloudNet', 'WebPro', 'CodeHub', 'DevOps Inc', 'AI Solutions'];
+    const industries = ['IT Services', 'Software', 'E-commerce', 'FinTech', 'HealthTech', 'EdTech'];
+    const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Pune', 'Hyderabad', 'Chennai'];
+    const statuses = ['Verified', 'Pending', 'Suspended', 'Shadow-Banned'];
+    const types = ['Enterprise', 'Startup', 'SME'];
+    
+    for (let i = 1; i <= count; i++) {
+        const trustScore = Math.floor(Math.random() * 50) + 50;
         employers.push({
             id: i,
-            company: i <= companies.length ? companies[i-1] : `Company ${i}`,
-            contact: contacts[Math.floor(Math.random() * contacts.length)],
-            email: `contact${i}@company${i}.com`,
-            phone: `+91-98765432${String(i).padStart(2, '0')}`,
+            company: `${companies[Math.floor(Math.random() * companies.length)]} ${i}`,
+            contact: `Contact Person ${i}`,
+            email: `employer${i}@company.com`,
+            phone: `+91-${Math.floor(Math.random() * 9000000000) + 1000000000}`,
             trustScore: trustScore,
-            status: status,
-            gst: status !== 'Pending' ? `GST${100000 + i}` : '',
-            cin: status === 'Verified' ? `CIN${700000 + i}` : '',
+            riskLevel: trustScore >= 80 ? 'Low' : (trustScore >= 60 ? 'Medium' : 'High'),
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            gst: Math.random() > 0.3 ? `GST${Math.floor(Math.random() * 1000000)}` : null,
+            cin: Math.random() > 0.4 ? `CIN${Math.floor(Math.random() * 1000000)}` : null,
             domain: `company${i}.com`,
-            verified: status === 'Verified',
-            jobsPosted: Math.floor(Math.random() * 300),
-            registered: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
-            lastActive: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString().split('T')[0],
-            riskLevel: riskLevel,
-            employerType: employerTypes[Math.floor(Math.random() * employerTypes.length)],
+            verified: Math.random() > 0.3,
+            jobsPosted: Math.floor(Math.random() * 100) + 1,
+            registered: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            lastActive: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            employerType: types[Math.floor(Math.random() * types.length)],
             location: locations[Math.floor(Math.random() * locations.length)],
             industry: industries[Math.floor(Math.random() * industries.length)]
         });
@@ -172,157 +495,144 @@ function generateEmployers(count) {
 }
 
 function generateVerificationJobs(count) {
-    const titles = ['Senior Full Stack Developer', 'Digital Marketing Manager', 'Data Scientist', 'UI/UX Designer', 'DevOps Engineer', 'Product Manager', 'Business Analyst', 'Python Developer', 'Sales Executive', 'Content Writer'];
-    const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Pune', 'Hyderabad', 'Chennai'];
-    const categories = ['IT & Software', 'Marketing', 'Sales', 'Design', 'Business', 'Product'];
+    const jobs = [];
+    const titles = ['Software Engineer', 'Product Manager', 'Data Analyst', 'UI/UX Designer', 'DevOps Engineer'];
+    const companies = ['TechCorp', 'InnoSoft', 'DataSys', 'CloudNet', 'WebPro'];
+    const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Pune', 'Hyderabad'];
+    const categories = ['IT & Software', 'Marketing', 'Sales', 'Design', 'Operations'];
     const priorities = ['High', 'Medium', 'Low'];
     
-    const jobs = [];
     for (let i = 1; i <= count; i++) {
-        const priority = i <= 20 ? 'High' : (i <= 45 ? 'Medium' : 'Low');
-        const jdQuality = Math.floor(Math.random() * 100);
-        const salaryRealistic = Math.random() > 0.3;
-        
+        const jdQuality = Math.floor(Math.random() * 40) + 60;
         jobs.push({
             id: i,
-            title: titles[Math.floor(Math.random() * titles.length)],
-            company: `Company ${Math.floor(Math.random() * 60) + 1}`,
-            companyId: Math.floor(Math.random() * 60) + 1,
+            title: `${titles[Math.floor(Math.random() * titles.length)]} ${i}`,
+            company: companies[Math.floor(Math.random() * companies.length)],
             location: locations[Math.floor(Math.random() * locations.length)],
-            salary: `${5 + Math.floor(Math.random() * 20)}-${15 + Math.floor(Math.random() * 30)} LPA`,
-            experience: `${Math.floor(Math.random() * 5)}-${3 + Math.floor(Math.random() * 8)} years`,
-            posted: `${Math.floor(Math.random() * 24)} hours ago`,
-            priority: priority,
+            salary: `₹${Math.floor(Math.random() * 10) + 5}L - ₹${Math.floor(Math.random() * 10) + 15}L`,
+            experience: `${Math.floor(Math.random() * 5)}-${Math.floor(Math.random() * 5) + 5} years`,
             category: categories[Math.floor(Math.random() * categories.length)],
-            skills: ['Skill1', 'Skill2', 'Skill3'],
             jdQuality: jdQuality,
-            salaryRealistic: salaryRealistic,
-            duplicateCheck: Math.random() > 0.9 ? 'Duplicate Found' : 'Clean',
-            contentFlags: jdQuality < 50 ? ['Missing JD', 'Poor Quality'] : [],
-            trustScore: 50 + Math.floor(Math.random() * 50)
+            trustScore: Math.floor(Math.random() * 40) + 60,
+            salaryRealistic: Math.random() > 0.2,
+            duplicateCheck: Math.random() > 0.1 ? 'Clean' : 'Duplicate Found',
+            priority: priorities[Math.floor(Math.random() * priorities.length)],
+            contentFlags: Math.random() > 0.7 ? ['Missing Skills', 'Vague Description'] : [],
+            postedDate: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
         });
     }
     return jobs;
 }
 
 function generateAllJobs(count) {
-    const titles = ['Software Engineer', 'Product Manager', 'Data Analyst', 'Marketing Manager', 'Sales Executive', 'HR Manager', 'Finance Analyst', 'Operations Manager'];
-    const categories = ['IT & Software', 'Product', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'];
-    const statuses = ['Active', 'Paused', 'Closed'];
-    
     const jobs = [];
+    const titles = ['Software Engineer', 'Product Manager', 'Data Analyst', 'UI/UX Designer', 'DevOps Engineer', 'Marketing Manager', 'Sales Executive'];
+    const companies = ['TechCorp', 'InnoSoft', 'DataSys', 'CloudNet', 'WebPro', 'CodeHub', 'DevOps Inc'];
+    const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Pune', 'Hyderabad', 'Chennai', 'Kolkata'];
+    const statuses = ['Active', 'Paused', 'Closed', 'Expired'];
+    const categories = ['IT & Software', 'Marketing', 'Sales', 'Design', 'Operations', 'Finance', 'HR'];
+    
     for (let i = 1; i <= count; i++) {
-        const status = i <= 60 ? 'Active' : (i <= 80 ? 'Paused' : 'Closed');
-        
         jobs.push({
             id: i,
-            title: titles[Math.floor(Math.random() * titles.length)],
-            company: `Company ${Math.floor(Math.random() * 60) + 1}`,
-            companyId: Math.floor(Math.random() * 60) + 1,
+            title: `${titles[Math.floor(Math.random() * titles.length)]} ${i}`,
+            company: companies[Math.floor(Math.random() * companies.length)],
+            location: locations[Math.floor(Math.random() * locations.length)],
+            salary: `₹${Math.floor(Math.random() * 10) + 5}L - ₹${Math.floor(Math.random() * 10) + 15}L`,
+            experience: `${Math.floor(Math.random() * 5)}-${Math.floor(Math.random() * 5) + 5} years`,
             category: categories[Math.floor(Math.random() * categories.length)],
-            location: ['Bangalore', 'Mumbai', 'Delhi'][Math.floor(Math.random() * 3)],
-            salary: `${8 + Math.floor(Math.random() * 15)}-${15 + Math.floor(Math.random() * 25)} LPA`,
-            experience: `${Math.floor(Math.random() * 5)}-${3 + Math.floor(Math.random() * 8)} years`,
-            applications: Math.floor(Math.random() * 200),
-            views: Math.floor(Math.random() * 3000),
-            status: status,
-            posted: new Date(2024, 0, Math.floor(Math.random() * 60) + 1).toISOString().split('T')[0],
-            expires: new Date(2024, 2, Math.floor(Math.random() * 30) + 1).toISOString().split('T')[0],
-            responseRate: 50 + Math.floor(Math.random() * 50),
-            qualityScore: 60 + Math.floor(Math.random() * 40)
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            applications: Math.floor(Math.random() * 500) + 10,
+            views: Math.floor(Math.random() * 2000) + 100,
+            postedDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            expiryDate: new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
         });
     }
     return jobs;
 }
 
 function generateCandidates(count) {
-    const names = ['Rahul Sharma', 'Priya Patel', 'Amit Kumar', 'Sneha Reddy', 'Vikram Singh', 'Neha Gupta', 'Arjun Mehta', 'Kavya Iyer'];
-    const roles = ['Senior Developer', 'Marketing Executive', 'Data Analyst', 'Designer', 'Product Manager'];
-    
     const candidates = [];
+    const names = ['Rahul', 'Priya', 'Amit', 'Sneha', 'Vikram', 'Anjali', 'Rohan', 'Kavya'];
+    const locations = ['Bangalore', 'Mumbai', 'Delhi', 'Pune', 'Hyderabad', 'Chennai'];
+    const skills = ['Java', 'Python', 'React', 'Node.js', 'AWS', 'SQL', 'JavaScript'];
+    
     for (let i = 1; i <= count; i++) {
         candidates.push({
             id: i,
             name: `${names[Math.floor(Math.random() * names.length)]} ${i}`,
             email: `candidate${i}@email.com`,
-            phone: `+91-98765432${String(i).padStart(2, '0')}`,
-            location: ['Bangalore', 'Mumbai', 'Delhi'][Math.floor(Math.random() * 3)],
+            phone: `+91-${Math.floor(Math.random() * 9000000000) + 1000000000}`,
+            location: locations[Math.floor(Math.random() * locations.length)],
             experience: `${Math.floor(Math.random() * 10)} years`,
-            currentRole: roles[Math.floor(Math.random() * roles.length)],
-            skills: ['Skill1', 'Skill2', 'Skill3'],
-            education: ['B.Tech CSE', 'MBA', 'M.Tech'][Math.floor(Math.random() * 3)],
-            registered: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
-            lastActive: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString().split('T')[0],
-            applications: Math.floor(Math.random() * 50),
-            profileComplete: 60 + Math.floor(Math.random() * 40),
-            verified: Math.random() > 0.3
+            currentRole: `${['Software Engineer', 'Data Analyst', 'Product Manager'][Math.floor(Math.random() * 3)]}`,
+            skills: [skills[Math.floor(Math.random() * skills.length)], skills[Math.floor(Math.random() * skills.length)]],
+            applications: Math.floor(Math.random() * 50) + 1,
+            profileViews: Math.floor(Math.random() * 200) + 10,
+            registered: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            lastActive: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
         });
     }
     return candidates;
 }
 
 function generateSkills(count) {
-    const categories = ['Technical', 'Soft Skills', 'Tools', 'Languages'];
     const skills = [];
+    const categories = ['Programming', 'Design', 'Marketing', 'Management', 'Data Science', 'DevOps'];
     
     for (let i = 1; i <= count; i++) {
         skills.push({
             id: i,
             name: `Skill ${i}`,
             category: categories[Math.floor(Math.random() * categories.length)],
-            usage: Math.floor(Math.random() * 25000),
-            status: Math.random() > 0.1 ? 'Active' : 'Inactive',
+            jobs: Math.floor(Math.random() * 1000) + 10,
+            candidates: Math.floor(Math.random() * 5000) + 100,
             trending: Math.random() > 0.7,
-            growth: (Math.random() * 30).toFixed(1),
-            duplicates: Math.floor(Math.random() * 3)
+            growth: `${Math.floor(Math.random() * 50)}%`,
+            avgSalary: `₹${Math.floor(Math.random() * 10) + 5}L`
         });
     }
     return skills;
 }
 
 function generateScamReports(count) {
-    const types = ['Fake Job', 'Salary Mismatch', 'Payment Request', 'Fake Company', 'Harassment'];
-    const statuses = ['Investigating', 'Resolved', 'Pending', 'Escalated'];
-    const severities = ['High', 'Medium', 'Low'];
-    
     const reports = [];
+    const types = ['Payment Request', 'Fake Job', 'Inappropriate Content', 'Spam', 'Phishing'];
+    const severities = ['Low', 'Medium', 'High'];
+    const statuses = ['Pending', 'Investigating', 'Resolved', 'Escalated'];
+    
     for (let i = 1; i <= count; i++) {
         reports.push({
             id: i,
             type: types[Math.floor(Math.random() * types.length)],
-            reportedBy: 'candidate',
-            candidateId: Math.floor(Math.random() * 80) + 1,
-            jobId: Math.floor(Math.random() * 100) + 1,
-            employerId: Math.floor(Math.random() * 60) + 1,
-            reason: 'Suspicious activity detected',
-            status: statuses[Math.floor(Math.random() * statuses.length)],
             severity: severities[Math.floor(Math.random() * severities.length)],
-            reported: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString(),
-            evidence: ['Screenshot', 'Email'],
-            action: 'Pending Review'
+            status: statuses[Math.floor(Math.random() * statuses.length)],
+            reason: `Scam report reason ${i}`,
+            evidence: ['Screenshot', 'Email', 'Chat Log'],
+            reported: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            reportedBy: `Candidate ${i}`
         });
     }
     return reports;
 }
 
 function generatePayments(count) {
-    const plans = ['Premium', 'Standard', 'Basic', 'Enterprise'];
-    const methods = ['Credit Card', 'Net Banking', 'UPI', 'Wallet'];
-    const statuses = ['Success', 'Pending', 'Failed'];
-    
     const payments = [];
+    const types = ['Sponsored Job', 'Resume Credits', 'Subscription', 'Featured Listing'];
+    const statuses = ['Success', 'Pending', 'Failed', 'Refunded'];
+    const methods = ['Credit Card', 'Debit Card', 'UPI', 'Net Banking', 'Wallet'];
+    
     for (let i = 1; i <= count; i++) {
         payments.push({
             id: i,
-            employerId: Math.floor(Math.random() * 60) + 1,
-            company: `Company ${Math.floor(Math.random() * 60) + 1}`,
-            amount: 5000 + Math.floor(Math.random() * 45000),
-            plan: plans[Math.floor(Math.random() * plans.length)],
-            type: 'Subscription',
-            status: i <= 55 ? 'Success' : (i <= 58 ? 'Pending' : 'Failed'),
-            date: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString().split('T')[0],
+            transactionId: `TXN${Math.floor(Math.random() * 1000000)}`,
+            employer: `Company ${i}`,
+            type: types[Math.floor(Math.random() * types.length)],
+            amount: Math.floor(Math.random() * 50000) + 1000,
+            status: statuses[Math.floor(Math.random() * statuses.length)],
             method: methods[Math.floor(Math.random() * methods.length)],
-            invoice: `INV-2024-${String(i).padStart(3, '0')}`
+            date: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            invoiceUrl: `https://invoice.example.com/${i}.pdf`
         });
     }
     return payments;
@@ -330,14 +640,18 @@ function generatePayments(count) {
 
 function generateBehavioralPatterns(count) {
     const patterns = [];
+    const types = ['Copy-Paste JD', 'Rapid Posting', 'Low Response Rate', 'Suspicious Login', 'Mass Application'];
+    
     for (let i = 1; i <= count; i++) {
         patterns.push({
             id: i,
-            employerId: Math.floor(Math.random() * 60) + 1,
-            pattern: ['Copy-Paste Detected', 'Rapid Posting', 'Low Engagement', 'Suspicious Timing'][Math.floor(Math.random() * 4)],
-            severity: ['High', 'Medium', 'Low'][Math.floor(Math.random() * 3)],
-            detected: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString(),
-            actionTaken: ['Flagged', 'Warned', 'Restricted'][Math.floor(Math.random() * 3)]
+            type: types[Math.floor(Math.random() * types.length)],
+            entity: `Entity ${i}`,
+            severity: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
+            occurrences: Math.floor(Math.random() * 50) + 1,
+            firstDetected: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            lastDetected: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+            actionTaken: Math.random() > 0.5 ? 'Shadow Ban' : 'Warning Sent'
         });
     }
     return patterns;
@@ -345,13 +659,16 @@ function generateBehavioralPatterns(count) {
 
 function generateRiskAlerts(count) {
     const alerts = [];
+    const types = ['Fraud Ring', 'Salary Spike', 'Apply Burst', 'Domain Clustering', 'Unusual Activity'];
+    
     for (let i = 1; i <= count; i++) {
         alerts.push({
             id: i,
-            type: ['Fraud Ring', 'Salary Inflation', 'Mass Posting', 'Duplicate Jobs'][Math.floor(Math.random() * 4)],
-            severity: ['Critical', 'High', 'Medium'][Math.floor(Math.random() * 3)],
-            detected: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString(),
+            type: types[Math.floor(Math.random() * types.length)],
+            severity: ['Low', 'Medium', 'High', 'Critical'][Math.floor(Math.random() * 4)],
+            description: `Risk alert description ${i}`,
             affectedEntities: Math.floor(Math.random() * 20) + 1,
+            detected: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
             status: ['Active', 'Investigating', 'Resolved'][Math.floor(Math.random() * 3)]
         });
     }
@@ -359,19 +676,18 @@ function generateRiskAlerts(count) {
 }
 
 function generateAdminLogs(count) {
-    const actions = ['Approved Job', 'Rejected Job', 'Suspended Employer', 'Activated Employer', 'Modified Trust Score', 'Resolved Complaint'];
-    const admins = ['Master Admin', 'Trust Officer', 'Moderator', 'Fraud Analyst'];
-    
     const logs = [];
+    const actions = ['Approved Job', 'Rejected Job', 'Verified Employer', 'Suspended Account', 'Updated Settings'];
+    const admins = ['Admin1', 'Admin2', 'Admin3', 'SuperAdmin'];
+    
     for (let i = 1; i <= count; i++) {
         logs.push({
             id: i,
             admin: admins[Math.floor(Math.random() * admins.length)],
             action: actions[Math.floor(Math.random() * actions.length)],
-            target: `Entity ${Math.floor(Math.random() * 100) + 1}`,
-            timestamp: new Date(2024, 1, Math.floor(Math.random() * 18) + 1, Math.floor(Math.random() * 24), Math.floor(Math.random() * 60)).toISOString(),
-            details: 'Action performed successfully',
-            severity: ['Normal', 'Important', 'Critical'][Math.floor(Math.random() * 3)]
+            target: `Target ${i}`,
+            timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+            ipAddress: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`
         });
     }
     return logs;
@@ -379,29 +695,33 @@ function generateAdminLogs(count) {
 
 function generateComplianceRecords(count) {
     const records = [];
+    const types = ['GDPR', 'Data Retention', 'Privacy Policy', 'Terms Update'];
+    
     for (let i = 1; i <= count; i++) {
         records.push({
             id: i,
-            type: ['Consent Log', 'Data Export', 'Legal Notice', 'Audit Trail'][Math.floor(Math.random() * 4)],
-            entity: `Entity ${Math.floor(Math.random() * 100) + 1}`,
-            timestamp: new Date(2024, 1, Math.floor(Math.random() * 18) + 1).toISOString(),
-            status: ['Completed', 'Pending', 'Archived'][Math.floor(Math.random() * 3)],
-            officer: 'Compliance Officer'
+            type: types[Math.floor(Math.random() * types.length)],
+            description: `Compliance record ${i}`,
+            date: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            status: 'Compliant',
+            nextReview: new Date(Date.now() + Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
         });
     }
     return records;
 }
 
-function generateCompetitorData(count) {
+function generateCompetitors(count) {
     const competitors = [];
-    for (let i = 1; i <= count; i++) {
+    const names = ['Naukri', 'Indeed', 'Monster', 'LinkedIn', 'Shine', 'TimesJobs', 'Glassdoor', 'Internshala', 'Foundit', 'Apna'];
+    
+    for (let i = 0; i < count; i++) {
         competitors.push({
-            id: i,
-            name: `Competitor ${i}`,
-            marketShare: (Math.random() * 20).toFixed(1),
-            avgSalary: 8 + Math.floor(Math.random() * 15),
-            jobCount: Math.floor(Math.random() * 50000),
-            trend: Math.random() > 0.5 ? 'Growing' : 'Declining'
+            id: i + 1,
+            name: names[i],
+            activeJobs: Math.floor(Math.random() * 100000) + 10000,
+            marketShare: Math.floor(Math.random() * 30) + 5,
+            avgSalary: Math.floor(Math.random() * 500000) + 500000,
+            userBase: Math.floor(Math.random() * 10000000) + 1000000
         });
     }
     return competitors;
@@ -409,12 +729,14 @@ function generateCompetitorData(count) {
 
 function generateSalaryTrends(count) {
     const trends = [];
-    for (let i = 1; i <= count; i++) {
+    const roles = ['Software Engineer', 'Product Manager', 'Data Analyst', 'UI/UX Designer', 'DevOps Engineer'];
+    
+    for (let i = 0; i < count; i++) {
         trends.push({
-            id: i,
-            role: `Role ${i}`,
-            avgSalary: 8 + Math.floor(Math.random() * 20),
-            change: (Math.random() * 20 - 10).toFixed(1),
+            id: i + 1,
+            role: roles[Math.floor(Math.random() * roles.length)],
+            avgSalary: Math.floor(Math.random() * 1000000) + 500000,
+            growth: `${Math.floor(Math.random() * 20)}%`,
             demand: ['High', 'Medium', 'Low'][Math.floor(Math.random() * 3)]
         });
     }
@@ -423,19 +745,16 @@ function generateSalaryTrends(count) {
 
 function generateSkillDemand(count) {
     const demand = [];
-    for (let i = 1; i <= count; i++) {
+    const skills = ['Java', 'Python', 'React', 'Node.js', 'AWS', 'Docker', 'Kubernetes', 'SQL'];
+    
+    for (let i = 0; i < count; i++) {
         demand.push({
-            id: i,
-            skill: `Skill ${i}`,
-            demand: Math.floor(Math.random() * 10000),
-            growth: (Math.random() * 50).toFixed(1),
-            avgSalary: 8 + Math.floor(Math.random() * 15)
+            id: i + 1,
+            skill: skills[Math.floor(Math.random() * skills.length)],
+            jobs: Math.floor(Math.random() * 5000) + 100,
+            growth: `${Math.floor(Math.random() * 50)}%`,
+            avgSalary: Math.floor(Math.random() * 500000) + 400000
         });
     }
     return demand;
-}
-
-// Export for use in other files
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = DATA;
 }
