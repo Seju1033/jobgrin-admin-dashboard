@@ -3,380 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobGrin Admin Dashboard - Complete</title>
+    <title>JobGrin Master Admin - Complete Platform Governance</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        * { font-family: 'Inter', sans-serif; }
-        .sidebar-link:hover { background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%); }
-        .sidebar-link.active { background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%); border-left: 3px solid #3b82f6; }
-        .stat-card { transition: all 0.3s ease; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
-        .table-row:hover { background-color: #f9fafb; }
-        .badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-        .badge-success { background-color: #d1fae5; color: #065f46; }
-        .badge-warning { background-color: #fef3c7; color: #92400e; }
-        .badge-danger { background-color: #fee2e2; color: #991b1b; }
-        .badge-info { background-color: #dbeafe; color: #1e40af; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); }
-        .modal.active { display: flex; align-items: center; justify-content: center; }
-        .modal-content { animation: slideIn 0.3s; background: white; border-radius: 1rem; max-width: 90%; max-height: 90vh; overflow-y: auto; }
-        @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .toast { position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); z-index: 2000; display: none; }
-        .toast.active { display: block; animation: slideInRight 0.3s; }
-        @keyframes slideInRight { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .dropdown-menu { display: none; position: absolute; right: 0; margin-top: 0.5rem; background: white; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); z-index: 100; min-width: 200px; }
-        .dropdown-menu.active { display: block; }
-        .content-section { display: none; }
-        .content-section.active { display: block; }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="bg-gray-50">
-    <div id="toast" class="toast"></div>
-    
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-600 font-medium">Initializing JobGrin Master Admin...</p>
+            <p class="text-gray-400 text-sm mt-2">Loading governance modules</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Emergency Alert Banner -->
+    <div id="emergencyBanner" class="hidden fixed top-0 left-0 right-0 bg-red-600 text-white py-3 px-6 z-40">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-exclamation-triangle text-xl animate-pulse"></i>
+                <span class="font-semibold">🚨 EMERGENCY MODE ACTIVE - Platform Controls Engaged</span>
+            </div>
+            <button onclick="deactivateEmergency()" class="px-4 py-1 bg-white text-red-600 rounded font-medium hover:bg-gray-100">
+                Deactivate
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-lg flex-shrink-0 overflow-y-auto">
-            <div class="p-6 border-b">
+        <aside id="sidebar" class="w-64 bg-white shadow-lg flex-shrink-0 overflow-y-auto transition-all duration-300">
+            <!-- Logo & Branding -->
+            <div class="p-6 border-b bg-gradient-to-r from-blue-600 to-blue-700">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-briefcase text-white text-xl"></i>
+                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-blue-600 text-xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold text-gray-800">JobGrin</h1>
-                        <p class="text-xs text-gray-500">Admin Panel</p>
+                        <h1 class="text-xl font-bold text-white">JobGrin</h1>
+                        <p class="text-xs text-blue-100">Master Admin</p>
                     </div>
                 </div>
             </div>
             
+            <!-- Navigation -->
             <nav class="p-4">
                 <div class="space-y-1">
+                    <!-- Dashboard -->
                     <a href="#" class="sidebar-link active" data-section="dashboard">
-                        <i class="fas fa-home w-5"></i><span>Dashboard</span>
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
                     </a>
-                    <div class="pt-4 pb-2"><p class="px-4 text-xs font-semibold text-gray-400 uppercase">Job Management</p></div>
-                    <a href="#" class="sidebar-link" data-section="verification">
-                        <i class="fas fa-check-circle w-5"></i><span>Job Verification</span>
+
+                    <!-- LAYER 1: IDENTITY & TRUST GOVERNANCE -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-shield-alt mr-2"></i>Trust Governance
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="employer-trust">
+                        <i class="fas fa-building"></i>
+                        <span>Employer Trust Center</span>
+                        <span class="ml-auto bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">8</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="recruiter-control">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Recruiter Control</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="behavioral-intelligence">
+                        <i class="fas fa-brain"></i>
+                        <span>Behavioral Intelligence</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="shadow-banning">
+                        <i class="fas fa-user-slash"></i>
+                        <span>Shadow Banning</span>
+                    </a>
+
+                    <!-- LAYER 2: JOB CONTENT & QUALITY -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-check-circle mr-2"></i>Content Quality
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="job-verification">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Job Verification</span>
                         <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">12</span>
                     </a>
-                    <a href="#" class="sidebar-link" data-section="jobs">
-                        <i class="fas fa-list w-5"></i><span>All Jobs</span>
+                    
+                    <a href="#" class="sidebar-link" data-section="job-quality">
+                        <i class="fas fa-star"></i>
+                        <span>Quality Analyzer</span>
                     </a>
-                    <div class="pt-4 pb-2"><p class="px-4 text-xs font-semibold text-gray-400 uppercase">Employers</p></div>
-                    <a href="#" class="sidebar-link" data-section="employers">
-                        <i class="fas fa-building w-5"></i><span>All Employers</span>
+                    
+                    <a href="#" class="sidebar-link" data-section="content-moderation">
+                        <i class="fas fa-edit"></i>
+                        <span>Content Moderation</span>
                     </a>
-                    <div class="pt-4 pb-2"><p class="px-4 text-xs font-semibold text-gray-400 uppercase">Master Data</p></div>
+                    
+                    <a href="#" class="sidebar-link" data-section="seo-integrity">
+                        <i class="fas fa-search"></i>
+                        <span>SEO Integrity</span>
+                    </a>
+
+                    <!-- LAYER 3: CANDIDATE SAFETY -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-user-shield mr-2"></i>Candidate Safety
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="scam-monitoring">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Scam Monitoring</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">5</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="candidate-harm">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>Candidate Harm Index</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="complaints">
+                        <i class="fas fa-flag"></i>
+                        <span>Complaint Center</span>
+                    </a>
+
+                    <!-- LAYER 4: PLATFORM HEALTH -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-heartbeat mr-2"></i>Platform Health
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="marketplace-health">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Marketplace Health</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="risk-radar">
+                        <i class="fas fa-radar"></i>
+                        <span>Risk Radar</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="algorithm-governance">
+                        <i class="fas fa-cogs"></i>
+                        <span>Algorithm Governance</span>
+                    </a>
+
+                    <!-- LAYER 5: REVENUE & ABUSE -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-dollar-sign mr-2"></i>Revenue Control
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="plan-abuse">
+                        <i class="fas fa-ban"></i>
+                        <span>Plan Abuse Detection</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="payments">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Payments</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="trust-monetization">
+                        <i class="fas fa-award"></i>
+                        <span>Trust Monetization</span>
+                    </a>
+
+                    <!-- LAYER 6: DATA & OUTREACH -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-database mr-2"></i>Data & Outreach
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="data-intelligence">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Data Intelligence Hub</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="pr-media">
+                        <i class="fas fa-newspaper"></i>
+                        <span>PR & Media Control</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="market-narrative">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Market Narrative</span>
+                    </a>
+
+                    <!-- LAYER 7: CRISIS & COMPLIANCE -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-gavel mr-2"></i>Crisis & Compliance
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="emergency-controls">
+                        <i class="fas fa-fire-extinguisher"></i>
+                        <span>Emergency Controls</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="compliance-vault">
+                        <i class="fas fa-vault"></i>
+                        <span>Compliance Vault</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="admin-accountability">
+                        <i class="fas fa-user-check"></i>
+                        <span>Admin Accountability</span>
+                    </a>
+
+                    <!-- LAYER 8: ADVANCED INTELLIGENCE -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-brain mr-2"></i>Intelligence
+                    </div>
+                    
+                    <a href="#" class="sidebar-link" data-section="competitive-intel">
+                        <i class="fas fa-binoculars"></i>
+                        <span>Competitive Intel</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="policy-sandbox">
+                        <i class="fas fa-flask"></i>
+                        <span>Policy Sandbox</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="knowledge-capture">
+                        <i class="fas fa-book"></i>
+                        <span>Knowledge Capture</span>
+                    </a>
+
+                    <!-- MASTER DATA -->
+                    <div class="sidebar-section-title">
+                        <i class="fas fa-database mr-2"></i>Master Data
+                    </div>
+                    
                     <a href="#" class="sidebar-link" data-section="skills">
-                        <i class="fas fa-code w-5"></i><span>Skills</span>
+                        <i class="fas fa-code"></i>
+                        <span>Skills</span>
                     </a>
-                    <div class="pt-4 pb-2"><p class="px-4 text-xs font-semibold text-gray-400 uppercase">Analytics</p></div>
-                    <a href="#" class="sidebar-link" data-section="analytics">
-                        <i class="fas fa-chart-line w-5"></i><span>Reports</span>
+                    
+                    <a href="#" class="sidebar-link" data-section="categories">
+                        <i class="fas fa-tags"></i>
+                        <span>Categories</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="all-jobs">
+                        <i class="fas fa-briefcase"></i>
+                        <span>All Jobs</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="all-employers">
+                        <i class="fas fa-building"></i>
+                        <span>All Employers</span>
+                    </a>
+                    
+                    <a href="#" class="sidebar-link" data-section="candidates">
+                        <i class="fas fa-users"></i>
+                        <span>Candidates</span>
                     </a>
                 </div>
             </nav>
         </aside>
 
+        <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation Bar -->
             <header class="bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between px-6 py-4">
                     <div class="flex items-center space-x-4 flex-1">
-                        <input type="text" placeholder="Search..." class="w-full max-w-md pl-10 pr-4 py-2 border rounded-lg">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button class="relative"><i class="fas fa-bell text-xl"></i>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">5</span>
+                        <!-- Mobile Menu Toggle -->
+                        <button id="sidebarToggle" class="lg:hidden text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-bars text-xl"></i>
                         </button>
+                        
+                        <!-- Global Search -->
+                        <div class="relative flex-1 max-w-md">
+                            <input 
+                                type="text" 
+                                id="globalSearch" 
+                                placeholder="Search jobs, employers, candidates, reports..." 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Platform Health Indicator -->
+                        <div class="hidden md:flex items-center space-x-2 px-3 py-2 bg-green-50 rounded-lg cursor-pointer" onclick="navigateTo('marketplace-health')">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="text-xs font-medium text-green-700">Platform: 94% Healthy</span>
+                        </div>
+                        
+                        <!-- Trust Score Indicator -->
+                        <div class="hidden md:flex items-center space-x-2 px-3 py-2 bg-blue-50 rounded-lg">
+                            <i class="fas fa-shield-alt text-blue-600"></i>
+                            <span class="text-xs font-medium text-blue-700">Avg Trust: 82.5</span>
+                        </div>
+                        
+                        <!-- Notifications -->
                         <div class="relative">
-                            <button id="profileBtn" class="flex items-center space-x-2">
-                                <img src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff" class="w-8 h-8 rounded-full">
-                                <span class="text-sm font-semibold">Admin</span>
+                            <button id="notificationBtn" class="relative text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">23</span>
                             </button>
+                            
+                            <!-- Notification Dropdown -->
+                            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto">
+                                <div class="p-4 border-b">
+                                    <h3 class="font-semibold text-gray-800">Notifications</h3>
+                                </div>
+                                <div id="notificationList" class="divide-y">
+                                    <!-- Notifications will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Emergency Controls -->
+                        <button 
+                            id="emergencyBtn" 
+                            class="hidden md:flex items-center space-x-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition"
+                            onclick="navigateTo('emergency-controls')"
+                        >
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span class="text-sm font-medium">Emergency</span>
+                        </button>
+                        
+                        <!-- Profile Dropdown -->
+                        <div class="relative">
+                            <button id="profileBtn" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-3 py-2">
+                                <img 
+                                    src="https://ui-avatars.com/api/?name=Master+Admin&background=3b82f6&color=fff&bold=true" 
+                                    alt="Admin" 
+                                    class="w-8 h-8 rounded-full ring-2 ring-blue-500"
+                                >
+                                <div class="text-left hidden md:block">
+                                    <p class="text-sm font-semibold text-gray-800">Master Admin</p>
+                                    <p class="text-xs text-gray-500">Super Admin</p>
+                                </div>
+                                <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                            </button>
+                            
+                            <div id="profileMenu" class="dropdown-menu">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                    <i class="fas fa-user mr-2"></i> Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                    <i class="fas fa-cog mr-2"></i> Settings
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                    <i class="fas fa-shield-alt mr-2"></i> Security
+                                </a>
+                                <a href="#" onclick="navigateTo('admin-accountability')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                    <i class="fas fa-history mr-2"></i> My Activity Log
+                                </a>
+                                <hr class="my-1">
+                                <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-50">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <main class="flex-1 overflow-y-auto p-6">
-                <!-- Dashboard Section -->
-                <div id="dashboard" class="content-section active">
-                    <h2 class="text-2xl font-bold mb-6">Dashboard Overview</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-blue-500">
-                            <p class="text-sm text-gray-600">Total Jobs</p>
-                            <h3 class="text-3xl font-bold mt-2">90,234</h3>
-                            <p class="text-sm text-green-600 mt-2"><i class="fas fa-arrow-up"></i> 12.5%</p>
-                        </div>
-                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-green-500">
-                            <p class="text-sm text-gray-600">Active Employers</p>
-                            <h3 class="text-3xl font-bold mt-2">4,567</h3>
-                            <p class="text-sm text-green-600 mt-2"><i class="fas fa-arrow-up"></i> 8.2%</p>
-                        </div>
-                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-yellow-500">
-                            <p class="text-sm text-gray-600">Pending</p>
-                            <h3 class="text-3xl font-bold mt-2">12</h3>
-                            <p class="text-sm text-yellow-600 mt-2"><i class="fas fa-clock"></i> Action needed</p>
-                        </div>
-                        <div class="stat-card bg-white rounded-xl shadow p-6 border-l-4 border-purple-500">
-                            <p class="text-sm text-gray-600">Revenue</p>
-                            <h3 class="text-3xl font-bold mt-2">₹2.4L</h3>
-                            <p class="text-sm text-green-600 mt-2"><i class="fas fa-arrow-up"></i> 15.3%</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Job Trends</h3>
-                            <canvas id="jobChart" height="200"></canvas>
-                        </div>
-                        <div class="bg-white rounded-xl shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Categories</h3>
-                            <canvas id="categoryChart" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Job Verification Section -->
-                <div id="verification" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Job Verification</h2>
-                        <div class="space-x-2">
-                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg"><i class="fas fa-check"></i> Bulk Approve</button>
-                            <button class="px-4 py-2 bg-red-600 text-white rounded-lg"><i class="fas fa-times"></i> Bulk Reject</button>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left"><input type="checkbox"></th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Job Title</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Company</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Location</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="verificationTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- All Jobs Section -->
-                <div id="jobs" class="content-section">
-                    <h2 class="text-2xl font-bold mb-6">All Jobs</h2>
-                    <div class="bg-white rounded-xl shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Job Title</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Company</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Applications</th>
-                                </tr>
-                            </thead>
-                            <tbody id="jobsTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Employers Section -->
-                <div id="employers" class="content-section">
-                    <h2 class="text-2xl font-bold mb-6">All Employers</h2>
-                    <div class="bg-white rounded-xl shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Company</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Contact</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="employersTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Skills Section -->
-                <div id="skills" class="content-section">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Skills Management</h2>
-                        <button onclick="showToast('Add skill feature', 'info')" class="px-4 py-2 bg-blue-600 text-white rounded-lg"><i class="fas fa-plus"></i> Add Skill</button>
-                    </div>
-                    <div class="bg-white rounded-xl shadow overflow-hidden">
-                        <table class="w-full">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Skill Name</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Category</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Usage</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="skillsTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Analytics Section -->
-                <div id="analytics" class="content-section">
-                    <h2 class="text-2xl font-bold mb-6">Analytics & Reports</h2>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">Revenue Trends</h3>
-                            <canvas id="revenueChart" height="200"></canvas>
-                        </div>
-                        <div class="bg-white rounded-xl shadow p-6">
-                            <h3 class="text-lg font-semibold mb-4">User Growth</h3>
-                            <canvas id="userChart" height="200"></canvas>
-                        </div>
-                    </div>
-                </div>
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6" id="mainContent">
+                <!-- Content will be loaded dynamically -->
             </main>
         </div>
     </div>
 
-    <script>
-        // Sample Data
-        const jobs = [
-            {title: 'Senior Developer', company: 'Tech Corp', location: 'Bangalore', status: 'Active', applications: 45},
-            {title: 'Marketing Manager', company: 'Marketing Inc', location: 'Mumbai', status: 'Active', applications: 32},
-            {title: 'Data Scientist', company: 'AI Labs', location: 'Pune', status: 'Pending', applications: 0},
-        ];
+    <!-- Modals Container -->
+    <div id="modalsContainer"></div>
 
-        const employers = [
-            {company: 'Tech Corp', contact: 'John Doe', email: 'john@tech.com', status: 'Active'},
-            {company: 'Marketing Inc', contact: 'Jane Smith', email: 'jane@marketing.com', status: 'Active'},
-        ];
-
-        const skills = [
-            {name: 'JavaScript', category: 'Technical', usage: 1234},
-            {name: 'Python', category: 'Technical', usage: 987},
-            {name: 'Communication', category: 'Soft Skills', usage: 2345},
-        ];
-
-        // Navigation
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                const section = link.dataset.section;
-                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-                document.getElementById(section).classList.add('active');
-            });
-        });
-
-        // Toast
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toast');
-            const colors = {success: 'bg-green-500', error: 'bg-red-500', info: 'bg-blue-500'};
-            toast.className = `toast ${colors[type]} text-white active`;
-            toast.textContent = msg;
-            setTimeout(() => toast.classList.remove('active'), 3000);
-        }
-
-        // Populate Tables
-        function populateTables() {
-            document.getElementById('verificationTable').innerHTML = jobs.filter(j => j.status === 'Pending').map(j => `
-                <tr class="table-row">
-                    <td class="px-6 py-4"><input type="checkbox"></td>
-                    <td class="px-6 py-4 font-medium">${j.title}</td>
-                    <td class="px-6 py-4">${j.company}</td>
-                    <td class="px-6 py-4">${j.location}</td>
-                    <td class="px-6 py-4">
-                        <button onclick="showToast('Job approved!', 'success')" class="text-green-600 mr-2"><i class="fas fa-check"></i></button>
-                        <button onclick="showToast('Job rejected!', 'error')" class="text-red-600"><i class="fas fa-times"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            document.getElementById('jobsTable').innerHTML = jobs.map(j => `
-                <tr class="table-row">
-                    <td class="px-6 py-4 font-medium">${j.title}</td>
-                    <td class="px-6 py-4">${j.company}</td>
-                    <td class="px-6 py-4"><span class="badge badge-${j.status === 'Active' ? 'success' : 'warning'}">${j.status}</span></td>
-                    <td class="px-6 py-4">${j.applications}</td>
-                </tr>
-            `).join('');
-
-            document.getElementById('employersTable').innerHTML = employers.map(e => `
-                <tr class="table-row">
-                    <td class="px-6 py-4 font-medium">${e.company}</td>
-                    <td class="px-6 py-4">${e.contact}</td>
-                    <td class="px-6 py-4">${e.email}</td>
-                    <td class="px-6 py-4"><span class="badge badge-success">${e.status}</span></td>
-                </tr>
-            `).join('');
-
-            document.getElementById('skillsTable').innerHTML = skills.map(s => `
-                <tr class="table-row">
-                    <td class="px-6 py-4 font-medium">${s.name}</td>
-                    <td class="px-6 py-4">${s.category}</td>
-                    <td class="px-6 py-4">${s.usage}</td>
-                    <td class="px-6 py-4">
-                        <button class="text-blue-600 mr-2"><i class="fas fa-edit"></i></button>
-                        <button class="text-red-600"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Charts
-        function initCharts() {
-            new Chart(document.getElementById('jobChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{label: 'Jobs', data: [1200, 1900, 1500, 2100, 1800, 2400], borderColor: 'rgb(59, 130, 246)', tension: 0.4}]
-                },
-                options: {responsive: true, maintainAspectRatio: false}
-            });
-
-            new Chart(document.getElementById('categoryChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['IT', 'Marketing', 'Sales', 'Design'],
-                    datasets: [{data: [45, 20, 15, 20], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6']}]
-                },
-                options: {responsive: true, maintainAspectRatio: false}
-            });
-
-            new Chart(document.getElementById('revenueChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{label: 'Revenue', data: [3.2, 4.1, 3.8, 5.2, 4.5, 6.1], backgroundColor: '#3b82f6'}]
-                },
-                options: {responsive: true, maintainAspectRatio: false}
-            });
-
-            new Chart(document.getElementById('userChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [
-                        {label: 'Employers', data: [320, 410, 380, 520, 450, 610], borderColor: '#10b981', tension: 0.4},
-                        {label: 'Candidates', data: [1200, 1500, 1400, 1800, 1650, 2100], borderColor: '#8b5cf6', tension: 0.4}
-                    ]
-                },
-                options: {responsive: true, maintainAspectRatio: false}
-            });
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            populateTables();
-            initCharts();
-            setTimeout(() => showToast('Welcome to JobGrin Admin!'), 500);
-        });
-    </script>
-    <style>
-        .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; color: #374151; border-radius: 0.5rem; cursor: pointer; }
-        .sidebar-link span { font-weight: 500; }
-    </style>
+    <!-- Scripts -->
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/modules.js"></script>
+    <script src="assets/js/app.js"></script>
 </body>
 </html>
