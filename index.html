@@ -4,338 +4,258 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JobGrin Master Admin - Complete Platform Governance</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons & Charts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Loading Screen -->
-    <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
-        <div class="text-center">
-            <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-gray-600 font-medium">Initializing JobGrin Master Admin...</p>
-            <p class="text-gray-400 text-sm mt-2">Loading governance modules</p>
+    <div id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">JobGrin Master Admin</h2>
+            <p style="font-size: 1rem; opacity: 0.9;">Initializing governance modules...</p>
         </div>
     </div>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Emergency Alert Banner -->
-    <div id="emergencyBanner" class="hidden fixed top-0 left-0 right-0 bg-red-600 text-white py-3 px-6 z-40">
-        <div class="flex items-center justify-between max-w-7xl mx-auto">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-exclamation-triangle text-xl animate-pulse"></i>
-                <span class="font-semibold">🚨 EMERGENCY MODE ACTIVE - Platform Controls Engaged</span>
+    <!-- Emergency Banner -->
+    <div id="emergencyBanner" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 1rem 2rem; z-index: 200; box-shadow: 0 4px 20px rgba(244, 67, 54, 0.3);">
+        <div style="max-width: 1920px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem; animation: pulse 2s infinite;"></i>
+                <span style="font-weight: 600; font-size: 1.1rem;">🚨 EMERGENCY MODE ACTIVE - Platform Controls Engaged</span>
             </div>
-            <button onclick="deactivateEmergency()" class="px-4 py-1 bg-white text-red-600 rounded font-medium hover:bg-gray-100">
+            <button onclick="deactivateEmergency()" style="padding: 0.5rem 1.5rem; background: white; color: #f44336; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                 Deactivate
             </button>
         </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-white shadow-lg flex-shrink-0 overflow-y-auto transition-all duration-300">
-            <!-- Logo & Branding -->
-            <div class="p-6 border-b bg-gradient-to-r from-blue-600 to-blue-700">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                        <i class="fas fa-shield-alt text-blue-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-white">JobGrin</h1>
-                        <p class="text-xs text-blue-100">Master Admin</p>
-                    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Logo -->
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: 700; line-height: 1;">JobGrin</div>
+                    <div style="font-size: 0.75rem; color: #757575; font-weight: 500;">Master Admin</div>
                 </div>
             </div>
-            
-            <!-- Navigation -->
-            <nav class="p-4">
-                <div class="space-y-1">
-                    <!-- Dashboard -->
-                    <a href="#" class="sidebar-link active" data-section="dashboard">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
 
-                    <!-- LAYER 1: IDENTITY & TRUST GOVERNANCE -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-shield-alt mr-2"></i>Trust Governance
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="employer-trust">
-                        <i class="fas fa-building"></i>
-                        <span>Employer Trust Center</span>
-                        <span class="ml-auto bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">8</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="employer-verification">
-                        <i class="fas fa-certificate"></i>
-                        <span>Employer Verification</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="behavioral-intelligence">
-                        <i class="fas fa-brain"></i>
-                        <span>Behavioral Intelligence</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="shadow-banning">
-                        <i class="fas fa-user-slash"></i>
-                        <span>Shadow Banning</span>
-                    </a>
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="globalSearch" placeholder="Search employers, jobs, candidates...">
+            </div>
 
-                    <!-- LAYER 2: JOB CONTENT & QUALITY -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-check-circle mr-2"></i>Content Quality
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="job-verification">
-                        <i class="fas fa-clipboard-check"></i>
-                        <span>Job Verification</span>
-                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">12</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="job-quality-scoring">
-                        <i class="fas fa-star"></i>
-                        <span>Job Quality Scoring</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="xml-feeds">
-                        <i class="fas fa-rss"></i>
-                        <span>XML Feed Management</span>
-                    </a>
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <!-- Notifications -->
+                <button class="icon-btn" id="notificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </button>
 
-                    <!-- LAYER 3: CANDIDATE SAFETY -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-user-shield mr-2"></i>Candidate Safety
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="scam-monitoring">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>Scam Monitoring</span>
-                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">5</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="candidate-quality-tools">
-                        <i class="fas fa-user-check"></i>
-                        <span>Candidate Quality Tools</span>
-                    </a>
+                <!-- Settings -->
+                <button class="icon-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
 
-                    <!-- LAYER 4: PLATFORM HEALTH -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-heartbeat mr-2"></i>Platform Health
+                <!-- Profile -->
+                <button class="profile-btn" id="profileBtn">
+                    <div class="profile-avatar">MA</div>
+                    <div style="text-align: left;">
+                        <div style="font-size: 0.9rem; font-weight: 600;">Master Admin</div>
+                        <div style="font-size: 0.75rem; opacity: 0.9;">Super Admin</div>
                     </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="performance-monitoring">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Performance Monitoring</span>
-                    </a>
+                    <i class="fas fa-chevron-down" style="font-size: 0.75rem; opacity: 0.8;"></i>
+                </button>
 
-                    <!-- LAYER 5: REVENUE & ABUSE -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-dollar-sign mr-2"></i>Revenue Control
+                <!-- Profile Menu -->
+                <div id="profileMenu" style="position: absolute; top: 70px; right: 20px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(77, 175, 79, 0.15); min-width: 200px; display: none; z-index: 1000; border: 1px solid #e0e0e0;">
+                    <div style="padding: 1rem; border-bottom: 1px solid #f5f5f5;">
+                        <div style="font-weight: 600; color: #212121;">Master Admin</div>
+                        <div style="font-size: 0.85rem; color: #757575;">admin@jobgrin.com</div>
                     </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="payments">
-                        <i class="fas fa-credit-card"></i>
-                        <span>Payments</span>
+                    <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 0.75rem 1rem; color: #616161; text-decoration: none; transition: all 0.3s ease;">
+                        <i class="fas fa-user"></i>
+                        Profile Settings
                     </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="resume-search">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Resume Search Logs</span>
+                    <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 0.75rem 1rem; color: #616161; text-decoration: none; transition: all 0.3s ease;">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
                     </a>
-
-                    <!-- LAYER 6: DATA & OUTREACH -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-database mr-2"></i>Data & Outreach
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="data-intelligence">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Data Intelligence Hub</span>
-                    </a>
-
-                    <!-- LAYER 7: CRISIS & COMPLIANCE -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-gavel mr-2"></i>Crisis & Compliance
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="emergency-controls">
-                        <i class="fas fa-fire-extinguisher"></i>
-                        <span>Emergency Controls</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="audit-compliance">
-                        <i class="fas fa-clipboard-list"></i>
-                        <span>Audit & Compliance</span>
-                    </a>
-
-                    <!-- LAYER 8: AUTOMATION & COMMUNICATION -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-robot mr-2"></i>Automation
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="workflow-automation">
-                        <i class="fas fa-cogs"></i>
-                        <span>Workflow Automation</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="communication-center">
-                        <i class="fas fa-envelope"></i>
-                        <span>Communication Center</span>
-                    </a>
-
-                    <!-- MASTER DATA -->
-                    <div class="sidebar-section-title">
-                        <i class="fas fa-database mr-2"></i>Master Data
-                    </div>
-                    
-                    <a href="#" class="sidebar-link" data-section="skills">
-                        <i class="fas fa-code"></i>
-                        <span>Skills</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="courses">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span>Courses & Specializations</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="all-jobs">
-                        <i class="fas fa-briefcase"></i>
-                        <span>All Jobs</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="all-employers">
-                        <i class="fas fa-building"></i>
-                        <span>All Employers</span>
-                    </a>
-                    
-                    <a href="#" class="sidebar-link" data-section="candidates">
-                        <i class="fas fa-users"></i>
-                        <span>Candidates</span>
+                    <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 0.75rem 1rem; color: #f44336; text-decoration: none; border-top: 1px solid #f5f5f5; transition: all 0.3s ease;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
                     </a>
                 </div>
-            </nav>
+            </div>
+        </div>
+
+        <!-- Notification Dropdown -->
+        <div id="notificationDropdown" class="hidden" style="position: absolute; top: 70px; right: 200px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(77, 175, 79, 0.15); width: 400px; max-height: 500px; overflow-y: auto; z-index: 1000; border: 1px solid #e0e0e0;">
+            <div style="padding: 1rem 1.5rem; border-bottom: 2px solid #f5f5f5; background: linear-gradient(135deg, #e8f9e8 0%, #ffffff 100%);">
+                <h3 style="font-weight: 600; color: #212121; font-size: 1.1rem;">Notifications</h3>
+            </div>
+            <div id="notificationList"></div>
+            <div style="padding: 1rem; text-align: center; border-top: 1px solid #f5f5f5;">
+                <a href="#" style="color: #4daf4f; font-weight: 500; text-decoration: none;">View All Notifications</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div style="display: flex;">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <!-- Navigation Sections -->
+            <div class="sidebar-section">
+                <a href="#" class="sidebar-link active" data-section="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <!-- Trust Governance -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-shield-alt"></i> Trust Governance</h3>
+                <a href="#" class="sidebar-link" data-section="employer-trust">
+                    <i class="fas fa-building"></i>
+                    <span>Employer Trust Center</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="employer-verification">
+                    <i class="fas fa-certificate"></i>
+                    <span>Employer Verification</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="behavioral-intelligence">
+                    <i class="fas fa-brain"></i>
+                    <span>Behavioral Intelligence</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="shadow-banning">
+                    <i class="fas fa-user-slash"></i>
+                    <span>Shadow Banning</span>
+                </a>
+            </div>
+
+            <!-- Content Quality -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-check-circle"></i> Content Quality</h3>
+                <a href="#" class="sidebar-link" data-section="job-verification">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Job Verification</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="job-quality-scoring">
+                    <i class="fas fa-star"></i>
+                    <span>Job Quality Scoring</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="xml-feeds">
+                    <i class="fas fa-rss"></i>
+                    <span>XML Feed Management</span>
+                </a>
+            </div>
+
+            <!-- Safety & Monitoring -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-shield"></i> Safety & Monitoring</h3>
+                <a href="#" class="sidebar-link" data-section="scam-monitoring">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Scam Monitoring</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="candidate-quality-tools">
+                    <i class="fas fa-user-check"></i>
+                    <span>Candidate Quality</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="performance-monitoring">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Performance Monitor</span>
+                </a>
+            </div>
+
+            <!-- Platform Operations -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-cogs"></i> Operations</h3>
+                <a href="#" class="sidebar-link" data-section="communication-center">
+                    <i class="fas fa-comments"></i>
+                    <span>Communication Center</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="workflow-automation">
+                    <i class="fas fa-robot"></i>
+                    <span>Workflow Automation</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="resume-search">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Resume Search Logs</span>
+                </a>
+            </div>
+
+            <!-- Data & Intelligence -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-chart-line"></i> Intelligence</h3>
+                <a href="#" class="sidebar-link" data-section="data-intelligence">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Data Intelligence</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="audit-compliance">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Audit & Compliance</span>
+                </a>
+            </div>
+
+            <!-- Master Data -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-database"></i> Master Data</h3>
+                <a href="#" class="sidebar-link" data-section="all-jobs">
+                    <i class="fas fa-briefcase"></i>
+                    <span>All Jobs</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="all-employers">
+                    <i class="fas fa-building"></i>
+                    <span>All Employers</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="candidates">
+                    <i class="fas fa-users"></i>
+                    <span>Candidates</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="skills">
+                    <i class="fas fa-code"></i>
+                    <span>Skills</span>
+                </a>
+                <a href="#" class="sidebar-link" data-section="courses">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Courses</span>
+                </a>
+            </div>
+
+            <!-- Emergency -->
+            <div class="sidebar-section">
+                <h3><i class="fas fa-exclamation-circle"></i> Emergency</h3>
+                <a href="#" class="sidebar-link" data-section="emergency-controls" style="color: #f44336;">
+                    <i class="fas fa-power-off"></i>
+                    <span>Emergency Controls</span>
+                </a>
+            </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top Navigation Bar -->
-            <header class="bg-white shadow-sm z-10">
-                <div class="flex items-center justify-between px-6 py-4">
-                    <div class="flex items-center space-x-4 flex-1">
-                        <!-- Mobile Menu Toggle -->
-                        <button id="sidebarToggle" class="lg:hidden text-gray-600 hover:text-gray-800">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        
-                        <!-- Global Search -->
-                        <div class="relative flex-1 max-w-md">
-                            <input 
-                                type="text" 
-                                id="globalSearch" 
-                                placeholder="Search jobs, employers, candidates, reports..." 
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-4">
-                        <!-- Platform Health Indicator -->
-                        <div class="hidden md:flex items-center space-x-2 px-3 py-2 bg-green-50 rounded-lg cursor-pointer" onclick="navigateTo('performance-monitoring')">
-                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span class="text-xs font-medium text-green-700">Platform: 94% Healthy</span>
-                        </div>
-                        
-                        <!-- Trust Score Indicator -->
-                        <div class="hidden md:flex items-center space-x-2 px-3 py-2 bg-blue-50 rounded-lg">
-                            <i class="fas fa-shield-alt text-blue-600 text-sm"></i>
-                            <span class="text-xs font-medium text-blue-700">Trust: 82.5</span>
-                        </div>
-                        
-                        <!-- Notifications -->
-                        <div class="relative">
-                            <button id="notificationBtn" class="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg">
-                                <i class="fas fa-bell text-xl"></i>
-                                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                            </button>
-                            
-                            <!-- Notification Dropdown -->
-                            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
-                                <div class="p-4 border-b">
-                                    <h3 class="font-semibold text-gray-800">Notifications</h3>
-                                </div>
-                                <div id="notificationList" class="max-h-96 overflow-y-auto">
-                                    <!-- Notifications will be loaded here -->
-                                </div>
-                                <div class="p-3 border-t text-center">
-                                    <a href="#" class="text-sm text-blue-600 hover:text-blue-700">View All Notifications</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Profile Menu -->
-                        <div class="relative">
-                            <button id="profileBtn" class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg">
-                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                                    <span class="text-white text-sm font-semibold">MA</span>
-                                </div>
-                                <div class="hidden md:block text-left">
-                                    <p class="text-sm font-medium text-gray-800">Master Admin</p>
-                                    <p class="text-xs text-gray-500">Super Admin</p>
-                                </div>
-                                <i class="fas fa-chevron-down text-gray-400 text-xs"></i>
-                            </button>
-                            
-                            <!-- Profile Dropdown -->
-                            <div id="profileMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
-                                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
-                                    <i class="fas fa-user mr-2"></i>Profile
-                                </a>
-                                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
-                                    <i class="fas fa-cog mr-2"></i>Settings
-                                </a>
-                                <a href="#" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50">
-                                    <i class="fas fa-history mr-2"></i>Activity Log
-                                </a>
-                                <div class="border-t"></div>
-                                <a href="#" class="block px-4 py-3 text-sm text-red-600 hover:bg-red-50">
-                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Main Content -->
-            <main id="mainContent" class="flex-1 overflow-y-auto p-6">
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="mainContent">
                 <!-- Content will be dynamically loaded here -->
-            </main>
-        </div>
-    </div>
-
-    <!-- Dynamic Modal -->
-    <div id="dynamicModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-            <div class="flex items-center justify-between p-6 border-b">
-                <h3 id="modalTitle" class="text-xl font-bold text-gray-800"></h3>
-                <button onclick="Components.closeModal('dynamicModal')" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
             </div>
-            <div id="modalContent" class="p-6 overflow-y-auto max-h-[60vh]">
-                <!-- Modal content will be loaded here -->
-            </div>
-            <div id="modalActions" class="flex justify-end space-x-2 p-6 border-t bg-gray-50">
-                <!-- Modal actions will be loaded here -->
-            </div>
-        </div>
+        </main>
     </div>
 
     <!-- Scripts -->
